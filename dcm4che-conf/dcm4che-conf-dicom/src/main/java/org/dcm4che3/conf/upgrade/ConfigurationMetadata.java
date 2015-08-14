@@ -40,6 +40,11 @@
 
 package org.dcm4che3.conf.upgrade;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.dcm4che3.conf.core.api.ConfigurableClass;
 import org.dcm4che3.conf.core.api.ConfigurableProperty;
 
@@ -51,14 +56,31 @@ public class ConfigurationMetadata {
 
     @ConfigurableProperty
     private String version;
+    
+    @ConfigurableProperty
+    private Map<String, String> upgradeHistory = new TreeMap<String, String>();
+    
+    public static final SimpleDateFormat UPGRADE_HISTORY_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
     public String getVersion() {
         return version;
     }
 
     public void setVersion(String version) {
+        if (this.version == null || !this.version.equals(version)) {
+           upgradeHistory.put(version, UPGRADE_HISTORY_DATE_FORMAT.format(new Date())); 
+        }
         this.version = version;
     }
+
+    public Map<String, String> getUpgradeHistory() {
+        return upgradeHistory;
+    }
+
+    public void setUpgradeHistory(Map<String, String> upgradeHistory) {
+        this.upgradeHistory = upgradeHistory;
+    }
+    
 }
 
 
